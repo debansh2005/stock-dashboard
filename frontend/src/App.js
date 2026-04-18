@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
