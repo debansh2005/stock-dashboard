@@ -22,9 +22,7 @@ function App() {
   const [error, setError] = useState("");
 
   // Load default comparison
- useEffect(() => {
-  fetchData();
-}, [fetchData]);
+ 
 
  const fetchData = useCallback(() => {
   setLoading(true);
@@ -50,6 +48,9 @@ function App() {
       setLoading(false);
     });
 }, [symbol, symbol2]);
+useEffect(() => {
+  fetchData();
+}, [fetchData]);
 
   const chartData = {
     labels: data.map(item => item.date),
