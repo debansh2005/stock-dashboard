@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
 import {
@@ -22,38 +23,34 @@ function App() {
   const [error, setError] = useState("");
 
   // Load default comparison
-  useEffect(() => {
-    fetchData();
-  }, []);
+ useEffect(() => {
+  fetchData();
+}, [fetchData]);
 
-  const fetchData = () => {
-    setLoading(true);
-    setError("");
+ const fetchData = useCallback(() => {
+  setLoading(true);
+  setError("");
 
-    Promise.all([
-      axios.get(`https://stock-backend-zkrj.onrender.com/history/${symbol}`),
-      axios.get(`https://stock-backend-zkrj.onrender.com/history/${symbol2}`)
-    ])
-      .then(([res1, res2]) => {
-        if (Array.isArray(res1.data) && res1.data.length > 0) {
-          setData(res1.data.reverse());
-        } else {
-          setError(res1.data.error || "Error fetching first stock");
-        }
+  Promise.all([
+    axios.get(`https://stock-backend-zkrj.onrender.com/history/${symbol}`),
+    axios.get(`https://stock-backend-zkrj.onrender.com/history/${symbol2}`)
+  ])
+    .then(([res1, res2]) => {
+      if (Array.isArray(res1.data) && res1.data.length > 0) {
+        setData(res1.data.reverse());
+      }
 
-        if (Array.isArray(res2.data) && res2.data.length > 0) {
-          setData2(res2.data.reverse());
-        } else {
-          setError(res2.data.error || "Error fetching second stock");
-        }
+      if (Array.isArray(res2.data) && res2.data.length > 0) {
+        setData2(res2.data.reverse());
+      }
 
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Error fetching data");
-        setLoading(false);
-      });
-  };
+      setLoading(false);
+    })
+    .catch(() => {
+      setError("Error fetching data");
+      setLoading(false);
+    });
+}, [symbol, symbol2]);
 
   const chartData = {
     labels: data.map(item => item.date),
